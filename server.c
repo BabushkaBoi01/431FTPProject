@@ -148,7 +148,7 @@ if ( listen( server, SOMAXCONN ) < 0 ) {
         exit(1);
 }
 
-printf("Concurrent  socket server now starting on port %d\n",PORT);
+//printf("Concurrent  socket server now starting on port %d\n",PORT);
 printf("Wait for connection\n");
 
 while(1) {  // main accept() loop
