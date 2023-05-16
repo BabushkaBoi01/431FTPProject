@@ -117,4 +117,5 @@ while(1) {  // main accept() loop
 
 // Final Cleanup
 close(server);
+}
 
