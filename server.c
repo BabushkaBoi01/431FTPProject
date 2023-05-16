@@ -16,7 +16,12 @@ void do_job(int fd) {
 int length,rcnt;
 char recvbuf[DEFAULT_BUFLEN],bmsg[DEFAULT_BUFLEN];
 int  recvbuflen = DEFAULT_BUFLEN;
-
+ char titleMessage[]="Welcome to Amir's file server.\n";
+    if(send(fd,titleMessage,strlen(titleMessage),0)<0){
+        printf("Couldn't send welcome message");
+        close(fd);
+        return;
+    }
     // Receive until the peer shuts down the connection
     do {
         rcnt = recv(fd, recvbuf, recvbuflen, 0);
