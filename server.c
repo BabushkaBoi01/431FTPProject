@@ -159,7 +159,7 @@ while(1) {  // main accept() loop
           continue;
     }
 
-    printf("Server: got connection from %s\n", \
+    printf("%s connected to Amir's file server\n", \
             inet_ntoa(remote_addr.sin_addr));
 
     /* If fork create Child, take control over child and close on server side */
