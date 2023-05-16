@@ -10,7 +10,7 @@
 
 /* Definations */
 #define DEFAULT_BUFLEN 512
-#define PORT XXXX(Change me!)
+#define PORT 1084
 
 void do_job(int fd) {
 int length,rcnt;
