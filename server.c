@@ -72,7 +72,7 @@ int main(int argc, char *argv[]){
   }
  }
  if (directory == NULL||portNumber==0||passFile==NULL){
-   printf("Some arguements are missing");
+   printf("Some arguements are missing\n");
    printf("server -d directory -p port -u password\n-d: Specify running directory which files to be accessed,modified or erased\n-p: Define server port number\n-u: Password file that uses delimiter separated format which is delimiter is ':'",argv[0]);
   return 1;
  }
