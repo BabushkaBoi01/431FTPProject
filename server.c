@@ -87,6 +87,7 @@ if ((server = socket( AF_INET, SOCK_STREAM, 0)) < 0 ) {
     perror("Can't create socket!");
     return(1);
 }
+ printf("File server listening on localhost port %d\n",portNumber);
 
 
 /* Fill local and remote address structure with zero */
@@ -96,7 +97,7 @@ memset( &remote_addr, 0, sizeof(remote_addr) );
 /* Set values to local_addr structure */
 local_addr.sin_family = AF_INET;
 local_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-local_addr.sin_port = htons(PORT);
+local_addr.sin_port = htons(portNumber);
 
 // set SO_REUSEADDR on a socket to true (1):
 optval = 1;
