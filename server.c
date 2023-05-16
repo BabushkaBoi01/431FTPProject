@@ -1,4 +1,7 @@
 #include <sys/types.h>
+#include <unistd.h>
+#include <getopt.h>
+#include<fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -50,8 +53,29 @@ int  recvbuflen = DEFAULT_BUFLEN;
 
 
 
-int main()
-{
+int main(int argc, char *argv[]){
+  char *directory = NULL;
+  int portNumber = 0;
+  char *passFile = NULL;
+  int opt;
+ while((opt = getopt(argc,argv,"d:p:u:"))!=-1){
+  switch(opt){
+   case 'd':directory = optarg;
+            break;
+   case 'p':portNumber = atoi(optarg);
+            break;
+   case 'u':passFile = optarg;
+            break;
+   default:
+     printf("server -d directory -p port -u password\n-d: Specify running directory which files to be accessed,modified or erased\n-p: Define server port number\n-u: Password file that uses delimiter separated format which is delimiter is ':'",argv[0]);
+    return 1;
+  }
+ }
+ if directory == NULL||portNumber==0||passFile==NULL){
+   printf("Some arguements are missing");
+   printf("server -d directory -p port -u password\n-d: Specify running directory which files to be accessed,modified or erased\n-p: Define server port number\n-u: Password file that uses delimiter separated format which is delimiter is ':'",argv[0]);
+  return 1;
+ }
 int server, client;
 struct sockaddr_in local_addr;
 struct sockaddr_in remote_addr;
