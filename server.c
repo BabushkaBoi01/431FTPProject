@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <getopt.h>
 #include<fcntl.h>
+#include<stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,7 +16,36 @@
 #define DEFAULT_BUFLEN 512
 #define PORT 1084
 
-void do_job(int fd) {
+bool login(const char *username,const char *password, const char *passFile){
+ FILE *file = fopen(passFile,"r");
+ if(file == NULL){
+  printf("Error opening password file");
+  return false;
+ }
+ char naruto[100];
+ while(fgets(naruto,sizeof(naruto),file)!=NULL){
+  char userN[50],passW[50];
+  sscanf(naruto,"%[^:]:%s",userN,passW);
+   if(strcmp(userN,username)==0 && strcmp(passW,password)==0){
+     fclose(file);
+     return true;
+   }
+ }
+ fclose(file);
+ return false;
+}
+void userCommand(int fd,const char *username,const char *password,const char *passFile){
+ if(login(username,password,passFile)){
+  char replyMessage[]="200 User granted access.\n";
+  send(fd,replyMessage,strlen(replyMessage),0);
+ }
+ else{
+  char replyMessage[]="400 User not found.Please try with another user.\n";
+  send(fd,replyMessage,strlen(replyMessage),0);
+ }
+}
+
+void do_job(int fd,const char *passFile) {
 int length,rcnt;
 char recvbuf[DEFAULT_BUFLEN],bmsg[DEFAULT_BUFLEN];
 int  recvbuflen = DEFAULT_BUFLEN;
@@ -25,34 +55,37 @@ int  recvbuflen = DEFAULT_BUFLEN;
         close(fd);
         return;
     }
-    // Receive until the peer shuts down the connection
-    do {
-        rcnt = recv(fd, recvbuf, recvbuflen, 0);
-        if (rcnt > 0) {
-            printf("Bytes received: %d\n", rcnt);
-
-        // Echo the buffer back to the sender
-        rcnt = send( fd, recvbuf, rcnt, 0 );
-            if (rcnt < 0) {
-                printf("Send failed:\n");
-                close(fd);
-                break;
-            }
-            printf("Bytes sent: %d\n", rcnt);
-
-        }
-        else if (rcnt == 0)
-            printf("Connection closing...\n");
-        else  {
-            printf("Receive failed:\n");
-            close(fd);
-            break;
-        }
-    } while (rcnt > 0);
+   
+  while(true){
+   rcnt=recv(fd,recvbuf,recvbuflen,0);
+   if(rcnt>0){
+    recvbuf[rcnt] = '\0';
+    printf("Received : %s",recvbuf);
+    char command[50],username[50],password[50];
+    sscanf(recvbuf,"%s %s %s",command,username,password);
+    if(strcmp(command,"USER")==0){
+     userCommand(fd,username,password,passFile);
+    }
+    else if(strcmp(command,"QUIT")==0){
+     char replyMessage[]="Goodbye!\n";
+     send(fd,replyMessage,strlen(replyMessage),0);
+     break;
+    }
+    else{
+     char replyMessage[]="Invalid command\n";
+     send(fd,replyMessage,strlen(replyMessage),0);
+    }
+   }
+   else if(rcnt == 0){
+    printf("Connection is closing....\n");
+    break;
+   }
+   else{
+    printf("Receive failed.\n");
+    break;
+   }
+  }
 }
-
-
-
 int main(int argc, char *argv[]){
   char *directory = NULL;
   int portNumber = 0;
@@ -132,7 +165,7 @@ while(1) {  // main accept() loop
     /* If fork create Child, take control over child and close on server side */
     if ((pid=fork()) == 0) {
         close(server);
-        do_job(fd);
+        do_job(fd,passFile);
         printf("Child finished their job!\n");
         close(fd);
         exit(0);
@@ -142,5 +175,5 @@ while(1) {  // main accept() loop
 
 // Final Cleanup
 close(server);
+return 0;
 }
-
