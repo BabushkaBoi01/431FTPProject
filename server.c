@@ -79,7 +79,7 @@ void userCommand(int fd,const char *username,const char *password,const char *pa
     else if(strcmp(command,"LIST")==0){
      giveFiles(fd,directory);
     }
-    else if(strcmp(command,"GET")==0{
+    else if(strcmp(command,"GET")==0){
      char pathway[100];
      snprintf(pathway,sizeof(pathway),"%s/%s",directory,sasuke);
      FILE *file = fopen(pathway,"r");
