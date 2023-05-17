@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dirent.h>
 
 /* Socket API headers */
 #include <sys/socket.h>
@@ -35,12 +36,63 @@ bool login(const char *username,const char *password, const char *passFile){
  return false;
 }
 void giveFiles(int fd,const char *directory){
+ DIR *dir;
+ struct dirent *ent;
+ char replyMessage[DEFAULT_BUFLEN];
  
+ dir = opendir(directory)
+ if(dir!=NULL){
+  while((ent=readdir(dir))!=NULL){
+   if(ent->d_type==DT_REG){
+    snprintf(replyMessage,DEFAULT_BUFLEN,"%s %ld\n",ent->d_name,ent->d_reclen);
+    send(fd,replyMessage,strlen(replyMessage),0);
+   }
+  }
+  closedir(dir);
+ }
+ //Terminate with dot
+ char terminator[]=".\n";
+ send(fd,terminator,strlen(terminator),0);
 }
 void userCommand(int fd,const char *username,const char *password,const char *passFile){
  if(login(username,password,passFile)){
   char replyMessage[]="200 User granted access.\n";
   send(fd,replyMessage,strlen(replyMessage),0);
+  int rcnt;
+  char recvbuf[DEFAULT_BUFLEN];
+  int recvbuflen = DEFAULT_BUFLEN;
+  while(true){
+   rcnt = recv(fd,recvbuf,recvbuflen,0);
+   if(rcnt>0){
+    recvbuf[rcnt]='\0';
+    printf("Received : %s",recvbuf);
+    char command[50],username[50],password[50];
+    sscanf(recvbuf,"%s %s %s",command,username,password);
+    if(strcmp(command,"USER")==0){
+     userCommand(fd,username,password,passFile,directory);
+    }
+    else if (strcmp(command,"QUIT")==0){
+     char replyMessage[]="Goodbye!\n";
+     send(fd,replyMessage,strlen(replyMessage),0);
+     break;
+    }
+    else if(strcmp(command,"LIST")==0){
+     giveFiles(fd,directory);
+    }
+    else{
+    char replyMessage[]="Invalid command\n";
+    send(fd,replyMessage,strlen(replyMessage),0);
+    }
+    }
+   else if(rcnt ==0){
+    printf("Connection is closing....\n");
+    break;
+   }
+   else{
+    printf("Receive failed.\n");
+    break;
+   }
+  }
  }
  else{
   char replyMessage[]="400 User not found.Please try with another user.\n";
