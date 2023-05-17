@@ -100,7 +100,7 @@ void userCommand(int fd,const char *username,const char *password,const char *pa
  }
 }
 
-void do_job(int fd,const char *passFile) {
+void do_job(int fd,const char *passFile,const char *directory) {
 int length,rcnt;
 char recvbuf[DEFAULT_BUFLEN],bmsg[DEFAULT_BUFLEN];
 int  recvbuflen = DEFAULT_BUFLEN;
