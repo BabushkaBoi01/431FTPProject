@@ -220,7 +220,7 @@ while(1) {  // main accept() loop
     /* If fork create Child, take control over child and close on server side */
     if ((pid=fork()) == 0) {
         close(server);
-        do_job(fd,passFile);
+        do_job(fd,passFile,directory);
         printf("Child finished their job!\n");
         close(fd);
         exit(0);
