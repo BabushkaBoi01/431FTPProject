@@ -6,4 +6,6 @@ USER username password
   to login
 LIST
   to list files in arguement passed directory
+QUIT  
+  to close server
 
