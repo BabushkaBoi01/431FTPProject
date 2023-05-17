@@ -34,6 +34,9 @@ bool login(const char *username,const char *password, const char *passFile){
  fclose(file);
  return false;
 }
+void giveFiles(int fd,const char *directory){
+ 
+}
 void userCommand(int fd,const char *username,const char *password,const char *passFile){
  if(login(username,password,passFile)){
   char replyMessage[]="200 User granted access.\n";
