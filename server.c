@@ -66,10 +66,10 @@ void userCommand(int fd,const char *username,const char *password,const char *pa
    if(rcnt>0){
     recvbuf[rcnt]='\0';
     printf("Received : %s",recvbuf);
-    char command[50],username[50],password[50];
-    sscanf(recvbuf,"%s %s %s",command,username,password);
+    char command[50],sasuke[50];
+    sscanf(recvbuf,"%s %s",command,sasuke);
     if(strcmp(command,"USER")==0){
-     userCommand(fd,username,password,passFile,directory);
+     userCommand(fd,sasuke,password,passFile,directory);
     }
     else if (strcmp(command,"QUIT")==0){
      char replyMessage[]="Goodbye!\n";
@@ -78,6 +78,26 @@ void userCommand(int fd,const char *username,const char *password,const char *pa
     }
     else if(strcmp(command,"LIST")==0){
      giveFiles(fd,directory);
+    }
+    else if(strcmp(command,"GET")==0{
+     char pathway[100];
+     snprintf(pathway,sizeof(pathway),"%s/%s",directory,sasuke);
+     FILE *file = fopen(pathway,"r");
+     if(file!=NULL){
+      char sakura[DEFAULT_BUFLEN];
+      char replyMessage[DEFAULT_BUFLEN];
+      while(fgets(sakura,sizeof(sakura),file)!=NULL){
+       send(fd,sakura,strlen(sakura),0);
+      }
+      fclose(file);
+      char terminator[]="\r\n.\r\n";
+      send(fd,terminator,strlen(terminator),0);
+     }
+     else{
+      char replyMessage[DEFAULT_BUFLEN];
+      snprintf(replyMessage,DEFAULT_BUFLEN,"404 File %s not found.\n",sasuke);
+      send(fd,replyMessage,strlen(replyMessage),0);
+     }
     }
     else{
     char replyMessage[]="Invalid command\n";
