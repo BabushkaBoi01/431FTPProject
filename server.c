@@ -40,7 +40,7 @@ void giveFiles(int fd,const char *directory){
  struct dirent *ent;
  char replyMessage[DEFAULT_BUFLEN];
  
- dir = opendir(directory)
+ dir = opendir(directory);
  if(dir!=NULL){
   while((ent=readdir(dir))!=NULL){
    if(ent->d_type==DT_REG){
@@ -54,7 +54,7 @@ void giveFiles(int fd,const char *directory){
  char terminator[]=".\n";
  send(fd,terminator,strlen(terminator),0);
 }
-void userCommand(int fd,const char *username,const char *password,const char *passFile){
+void userCommand(int fd,const char *username,const char *password,const char *passFile,const char *directory){
  if(login(username,password,passFile)){
   char replyMessage[]="200 User granted access.\n";
   send(fd,replyMessage,strlen(replyMessage),0);
