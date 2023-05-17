@@ -8,4 +8,6 @@ LIST
   to list files in arguement passed directory
 QUIT  
   to close server
+GET 
+  gets content of specified file
 
