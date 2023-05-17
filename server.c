@@ -90,6 +90,7 @@ void userCommand(int fd,const char *username,const char *password,const char *pa
        send(fd,sakura,strlen(sakura),0);
       }
       fclose(file);
+      //Terminate with "\r\n.\r\n"
       char terminator[]="\r\n.\r\n";
       send(fd,terminator,strlen(terminator),0);
      }
