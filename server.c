@@ -119,7 +119,7 @@ int  recvbuflen = DEFAULT_BUFLEN;
     char command[50],username[50],password[50];
     sscanf(recvbuf,"%s %s %s",command,username,password);
     if(strcmp(command,"USER")==0){
-     userCommand(fd,username,password,passFile);
+     userCommand(fd,username,password,passFile,directory);
     }
     else if(strcmp(command,"QUIT")==0){
      char replyMessage[]="Goodbye!\n";
