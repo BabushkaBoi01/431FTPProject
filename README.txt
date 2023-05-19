@@ -17,4 +17,7 @@ GET <filename>
    devrim:seral
   and terminates it with "\r\n.\r\n"
   the <filename> should be in the -d specified directory
+ DEL <filename>
+  deletes the specified file 
+  so if i should send DEL test it deletes test file in the running directory and sends a 200 message if file cant be found it sends a 404
  
