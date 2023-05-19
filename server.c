@@ -89,7 +89,7 @@ void userCommand(int fd,const char *username,const char *password,const char *pa
    }
    else{
     char replyMessage[DEFAULT_BUFLEN];
-    snprintf(replyMessage,DEFAULT_BUFLEN,"200 File %s deleted.\n",sasuke);
+    snprintf(replyMessage,DEFAULT_BUFLEN,"404 File %s is not on the server.\n",sasuke);
     send(fd,replyMessage,strlen(replyMessage),0);
    }
   }
