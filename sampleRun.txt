@@ -1,0 +1,38 @@
+Server side 
+  running server 
+    21900084@db:~/Project$ ./server -d /home/student/21900084/Project/test -p 1084 -u password.txt
+    File server listening on localhost port 1084
+Client side 
+  connecting/interaction
+    21900084@db:~$ nc localhost 1084
+Welcome to Amir's file server.
+USER amir iamamir12
+200 User granted access.
+LIST
+test2 32
+test1 32
+test 24
+.
+GET test
+hello 2
+
+
+.
+GET test1
+hello
+
+
+.
+DEL test1
+200 File test1 deleted.
+DEL nofile
+404 File nofile is not on the server.
+LIST
+test2 32
+test 24
+.
+QUIT
+Goodbye!
+
+
+    
