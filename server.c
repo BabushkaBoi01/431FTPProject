@@ -79,7 +79,20 @@ void userCommand(int fd,const char *username,const char *password,const char *pa
     else if(strcmp(command,"LIST")==0){
      giveFiles(fd,directory);
     }
-  
+  else if (strcmp(command,"DEL")==0){
+  char kakashi[100];
+  snprintf(kakashi,sizeof(kakashi),"%s/%s",directory,sasuke);
+   if(remove(kakashi)==0){
+    char replyMessage[DEFAULT_BUFLEN];
+    snprintf(replyMessage,DEFAULT_BUFLEN,"200 File %s deleted.\n",sasuke);
+    send(fd,replyMessage,strlen(replyMessage),0);
+   }
+   else{
+    char replyMessage[DEFAULT_BUFLEN];
+    snprintf(replyMessage,DEFAULT_BUFLEN,"200 File %s deleted.\n",sasuke);
+    send(fd,replyMessage,strlen(replyMessage),0);
+   }
+  }
     else if(strcmp(command,"GET")==0){
      char pathway[100];
      snprintf(pathway,sizeof(pathway),"%s/%s",directory,sasuke);
