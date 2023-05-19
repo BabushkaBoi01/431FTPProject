@@ -244,7 +244,7 @@ while(1) {  // main accept() loop
     if ((pid=fork()) == 0) {
         close(server);
         do_job(fd,passFile,directory);
-        printf("Child finished their job!\n");
+        printf("Connection closed!!!\n");
         close(fd);
         exit(0);
     }
