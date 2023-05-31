@@ -1,3 +1,5 @@
+Runs on Linux environment 
+Compile with gcc server.c -o server
 ./server -d directory -p port -u passwordFile
 Note: Password file(password.txt) should be in the same directory as server
 Commands:
