@@ -1,3 +1,5 @@
+After compiling
+.................
 Server side 
   running server 
     21900084@db:~/Project$ ./server -d /home/student/21900084/Project/test -p 1084 -u password.txt
@@ -34,7 +36,7 @@ odumo 32
 smada 32
 .
 QUIT
-Goo
+
 
 
     
