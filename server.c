@@ -93,6 +93,56 @@ void userCommand(int fd,const char *username,const char *password,const char *pa
     send(fd,replyMessage,strlen(replyMessage),0);
    }
   }
+    else if (strcmp(command, "PUT") == 0) {
+    char filename[100];
+    sscanf(recvbuf, "%s %s", command, filename);
+    printf("Start receiving %s file.\n", filename);
+    char filepath[200];
+    snprintf(filepath, sizeof(filepath), "%s/%s", directory, filename);
+    FILE* file = fopen(filepath, "w");
+    if (file == NULL) {
+        char replyMessage[] = "400 File cannot be saved on the server side.\n";
+        send(fd, replyMessage, strlen(replyMessage), 0);
+    } else {
+        char replyMessage[DEFAULT_BUFLEN];
+        snprintf(replyMessage, DEFAULT_BUFLEN, "200 Start receiving %s file.\n", filename);
+        send(fd, replyMessage, strlen(replyMessage), 0);
+
+        // Receive file content until a line containing only a dot (.)
+        bool receiving = true;
+        while (receiving) {
+            rcnt = recv(fd, recvbuf, recvbuflen, 0);
+            if (rcnt > 0) {
+                recvbuf[rcnt] = '\0';
+                printf("Received: %s", recvbuf);
+
+                if (strcmp(recvbuf, ".\n") == 0 || strcmp(recvbuf, ".\r\n") == 0) {
+                    receiving = false;
+                } else {
+                    fputs(recvbuf, file);
+                }
+            } else if (rcnt == 0) {
+                printf("Connection is closing....\n");
+                break;
+            } else {
+                printf("Receive failed.\n");
+                break;
+            }
+        }
+
+        fclose(file);
+
+        if (!receiving) {
+            char replyMessage[DEFAULT_BUFLEN];
+            snprintf(replyMessage, DEFAULT_BUFLEN, "200 %ld Byte %s file retrieved by server and was saved.\n", ftell(file), filename);
+            send(fd, replyMessage, strlen(replyMessage), 0);
+        } else {
+            char replyMessage[] = "400 File cannot be saved on the server side.\n";
+            send(fd, replyMessage, strlen(replyMessage), 0);
+        }
+    }
+}
+
     else if(strcmp(command,"GET")==0){
      char pathway[100];
      snprintf(pathway,sizeof(pathway),"%s/%s",directory,sasuke);
