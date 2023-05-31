@@ -1,4 +1,5 @@
 ./server -d directory -p port -u passwordFile
+Note: Password file(password.txt) should be in same directory as server
 Commands:
 USER <username> <password>
   to login
